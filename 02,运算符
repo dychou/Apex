@@ -113,17 +113,6 @@ Integer hoeyPay = joeyOrder == 1 ? OnlyOneSlice * joeyOrder :
 system.debug('hoeyPay:' + hoeyPay);
 
 -------------------------------------------优化写法---------------------------------
-/*pizza rates :
-   1 slice: 8$/slice
- 2-3 slice: 7$/slice  
-  >3 slice: 6$/slice
-
-      Ross: 3 slice
-  chandler: 1 slice
-      joey: 4 slice
-
-*/
-
 final Integer OnlyOneSlice = 8;
 final Integer UptoOThreeSlice = 7;
 final Integer MoreThenFourSlice = 6;
