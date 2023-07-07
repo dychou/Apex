@@ -1,0 +1,71 @@
+//赋值运算符：=
+integer x = 5;
+system.debug(x);
+//------------------------------------
+//数学运算符：+-*/
+x = x + 5;
+system.debug(x);
+x = x - 5;
+system.debug(x);
+x = x * 5;
+system.debug(x);
+x = x / 5;
+system.debug(x);
+//------------------------------------
+//增量运算符：++
+x++;
+system.debug(x);
+
+//减量运算符：--
+x--;
+system.debug(x);
+//------------------------------------
+//简化数学运算式
+x += 5; // x = x + 5;
+system.debug(x);
+
+x += 1; // x = x + 1;
+system.debug(x);
+
+x -= 5; // x = x - 5;
+system.debug(x);
+
+x *= 5; // x = x * 5;
+system.debug(x);
+
+x /= 5; // x = x / 5;
+system.debug(x);
+//------------------------------------
+//在string变量中 使用加法运算符
+string hello = 'Hello';
+string world = 'World';
+
+system.debug(hello + world);//HelloWorld
+system.debug(hello + ' ' + world);//Hello World
+
+//------------------------------------
+
+boolean first = true;
+boolean second = false;
+boolean result;
+// And 运算符: &&
+//如果first and second的值都为true，则result为true；
+//否则result的值为false
+result = first && second;
+system.debug(result);//false
+//------------------------------------
+// Or 运算符: ||
+//如果first 或者 second的值为true，则result为true；
+//否则result的值为false
+result = first || second;
+system.debug(result);
+//------------------------------------
+//等式运算符：==
+//如果first 和 second的值相等，则result为true；
+//否则result的值为false
+result = (first == second);
+system.debug('boolean' + result);
+result = (5 == 5);
+system.debug('integer' + result);
+result = ('hello' == 'world');
+system.debug('string' + result);
