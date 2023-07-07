@@ -98,17 +98,17 @@ Integer chandlerOrder = 1;
 Integer joeyOrder = 4;
 //嵌套三元运算符
 Integer rossPay = rossOrder == 1 ? OnlyOneSlice * rossOrder : 
-								  (rossOrder <=3 ? UptoOThreeSlice * rossOrder :
-                                   					MoreThenFourSlice * rossOrder);
+				  (rossOrder <=3 ? UptoOThreeSlice * rossOrder :
+                                   		   MoreThenFourSlice * rossOrder);
 system.debug('rossPay:' + rossPay);
 
 Integer chandlerPay = chandlerOrder == 1 ? OnlyOneSlice * chandlerOrder : 
-								  		  (chandlerOrder <=3 ? UptoOThreeSlice * chandlerOrder :
-                                   					   		   MoreThenFourSlice * chandlerOrder);
+					  (chandlerOrder <=3 ? UptoOThreeSlice * chandlerOrder :
+                                   				MoreThenFourSlice * chandlerOrder);
 system.debug('chandlerPay:' + chandlerPay);
 
 Integer hoeyPay = joeyOrder == 1 ? OnlyOneSlice * joeyOrder : 
-								  (joeyOrder <=3 ? UptoOThreeSlice * joeyOrder :
-                                   					MoreThenFourSlice * joeyOrder);
+				  (joeyOrder <=3 ? UptoOThreeSlice * joeyOrder :
+                                   		   MoreThenFourSlice * joeyOrder);
 system.debug('hoeyPay:' + hoeyPay);
 
