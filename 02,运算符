@@ -69,3 +69,14 @@ result = (5 == 5);
 system.debug('integer' + result);
 result = ('hello' == 'world');
 system.debug('string' + result);
+
+
+//练习：如果时间小于下午14点打印中午好；如果时间小于上午10点，打印早上好；
+
+string greeting = '';
+integer hour = 10;
+
+greeting = (hour < 14) ? '中午好' : '早上好';
+
+
+
