@@ -136,18 +136,18 @@ Integer numberOfSlice;
 //嵌套三元运算符
 numberOfSlice = rossOrder;
 Integer rossPay = numberOfSlice == 1 ? OnlyOneSlice * numberOfSlice : 
-								  (numberOfSlice <=3 ? UptoOThreeSlice * numberOfSlice :
-                                   					MoreThenFourSlice * numberOfSlice);
+				      (numberOfSlice <=3 ? UptoOThreeSlice * numberOfSlice :
+                                   		           MoreThenFourSlice * numberOfSlice);
 system.debug('rossPay:' + rossPay);
 
 numberOfSlice = chandlerOrder;
 Integer chandlerPay = numberOfSlice == 1 ? OnlyOneSlice * numberOfSlice : 
-								  		  (numberOfSlice <=3 ? UptoOThreeSlice * numberOfSlice :
-                                   					   		   MoreThenFourSlice * numberOfSlice);
+					  (numberOfSlice <=3 ? UptoOThreeSlice * numberOfSlice :
+                                   			       MoreThenFourSlice * numberOfSlice);
 system.debug('chandlerPay:' + chandlerPay);
 
 numberOfSlice = joeyOrder;
 Integer hoeyPay = numberOfSlice == 1 ? OnlyOneSlice * numberOfSlice : 
-								      (numberOfSlice <=3 ? UptoOThreeSlice * numberOfSlice :
-                                   					   	   MoreThenFourSlice * numberOfSlice);
+				      (numberOfSlice <=3 ? UptoOThreeSlice * numberOfSlice :
+                                   					     MoreThenFourSlice * numberOfSlice);
 system.debug('hoeyPay:' + hoeyPay);
