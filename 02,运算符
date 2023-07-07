@@ -112,3 +112,42 @@ Integer hoeyPay = joeyOrder == 1 ? OnlyOneSlice * joeyOrder :
                                    		   MoreThenFourSlice * joeyOrder);
 system.debug('hoeyPay:' + hoeyPay);
 
+-------------------------------------------优化写法---------------------------------
+/*pizza rates :
+   1 slice: 8$/slice
+ 2-3 slice: 7$/slice  
+  >3 slice: 6$/slice
+
+      Ross: 3 slice
+  chandler: 1 slice
+      joey: 4 slice
+
+*/
+
+final Integer OnlyOneSlice = 8;
+final Integer UptoOThreeSlice = 7;
+final Integer MoreThenFourSlice = 6;
+
+Integer rossOrder = 3;
+Integer chandlerOrder = 1;
+Integer joeyOrder = 4;
+
+Integer numberOfSlice;
+//嵌套三元运算符
+numberOfSlice = rossOrder;
+Integer rossPay = numberOfSlice == 1 ? OnlyOneSlice * numberOfSlice : 
+								  (numberOfSlice <=3 ? UptoOThreeSlice * numberOfSlice :
+                                   					MoreThenFourSlice * numberOfSlice);
+system.debug('rossPay:' + rossPay);
+
+numberOfSlice = chandlerOrder;
+Integer chandlerPay = numberOfSlice == 1 ? OnlyOneSlice * numberOfSlice : 
+								  		  (numberOfSlice <=3 ? UptoOThreeSlice * numberOfSlice :
+                                   					   		   MoreThenFourSlice * numberOfSlice);
+system.debug('chandlerPay:' + chandlerPay);
+
+numberOfSlice = joeyOrder;
+Integer hoeyPay = numberOfSlice == 1 ? OnlyOneSlice * numberOfSlice : 
+								      (numberOfSlice <=3 ? UptoOThreeSlice * numberOfSlice :
+                                   					   	   MoreThenFourSlice * numberOfSlice);
+system.debug('hoeyPay:' + hoeyPay);
