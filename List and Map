@@ -1,0 +1,14 @@
+
+List<String> apexPosts = new List<String>{'emystifying apex collections','datatypes and variables in apex'};
+List<String> lightningPosts = new List<String>{'Lightning','Event in Aura framework','Lightning','Developing reusable compoents'};
+
+map<string,List<string>> challenge1 = new map<string,List<string>>();
+challenge1.put('Apex',apexPosts);
+challenge1.put('Lightning',lightningPosts);
+
+//打印所有的key，值
+system.debug(challenge1);
+//打印所有的key
+system.debug(challenge1.keySet());
+//打印所有的值
+system.debug(challenge1.values());
