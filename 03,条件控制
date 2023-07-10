@@ -1,1 +1,13 @@
+boolean isItSunny = true;
+boolean isItRainning = false;
+boolean areYouWorking = false;
 
+if(isItSunny == false){
+    System.debug('Do not go to party');
+}else if(isItRainning == true){
+    System.debug('Do not go to party');
+}else if(areYouWorking == true){
+    System.debug('Do not go to party');
+}else{
+    System.debug('Yayy!! its party time');
+}
