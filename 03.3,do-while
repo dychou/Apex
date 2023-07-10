@@ -1,0 +1,16 @@
+//判断1100年之后，2000年之前，那些年份是闰年
+//代码需要执行900次
+Integer year = 1100;
+//System.debug(year);
+do{
+    if(Math.mod(year, 4) == 0){
+        if(Math.mod(year, 100) == 0){
+            if(Math.mod(year, 400) == 0){
+                system.debug(year + 'it is a leap year');
+        	}
+        }else{
+        	system.debug(year + 'it is a leap year');
+        }
+    }
+    year ++;
+}while(year <= 2000);
