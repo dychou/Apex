@@ -22,3 +22,17 @@ for(Integer year = 1100; year <= 2000; year++){
         }
     }
 }
+
+-----------------------另外一种for loop-------------------
+List<String> days = new List<String>{'Monday',
+    								 'Tuesday',
+    								 'Wednesday',
+    								 'Thursday',
+    								 'Friday',
+    								 'Saturday',
+    								 'Sunday'};
+for(string num : days ){    
+    system.debug('今天是' + num);
+    
+}
+
