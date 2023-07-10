@@ -53,3 +53,23 @@ do{
     }
     num ++;
 }while(num <= 100);
+
+
+-------------------------challenge2----------------
+//用while循环打印斐波那契数列
+Integer a;
+Integer b = 1;
+Integer c = 0;
+
+system.debug(c);
+system.debug(b);
+
+integer i = 0;
+while (i < 20){
+    a = b + c; //a = 1+0;
+    system.debug(a);
+    c = b; //c = 1;
+    b = a; //b = 1;
+    i++; //
+}
+
