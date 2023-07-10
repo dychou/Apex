@@ -11,3 +11,20 @@ if(isItSunny == false){
 }else{
     System.debug('Yayy!! its party time');
 }
+
+---------------------------or 简化代码------------------------
+boolean isItSunny = true;
+boolean isItRainning = false;
+boolean areYouWorking = false;
+
+if(!isItSunny){
+    System.debug('Do not go to party');
+}else if(isItRainning){
+    System.debug('Do not go to party');
+}else if(areYouWorking){
+    System.debug('Do not go to party');
+}else{
+    System.debug('Yayy!! its party time');
+}
+
+
