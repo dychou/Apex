@@ -14,3 +14,25 @@ do{
     }
     year ++;
 }while(year <= 2000);
+
+
+-------------------------challenge----------------
+//数字1-100
+//如果数字整除于3，打印fizz
+//如果数字整除于5，打印buzz
+//如果数字整除于3和5，打印fizzbuzz
+
+Integer num = 0;
+//System.debug(num);
+do{
+    if(Math.mod(num, 3) == 0){
+            system.debug(num + 'fizz');
+    }else if(Math.mod(num, 5) == 0){
+            system.debug(num + 'buzz');
+    }else if (Math.mod(num, 3) == 0 && Math.mod(num, 5) == 0){
+            system.debug(num + 'fizzbuzz');
+    }else{
+        system.debug(num );
+    }
+    num ++;
+}while(num <= 100);
