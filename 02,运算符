@@ -140,3 +140,14 @@ Integer hoeyPay = numberOfSlice == 1 ? OnlyOneSlice * numberOfSlice :
 				      (numberOfSlice <=3 ? UptoOThreeSlice * numberOfSlice :
                                    					     MoreThenFourSlice * numberOfSlice);
 system.debug('hoeyPay:' + hoeyPay);
+
+
+----------------------------------类型转换--------------------------------
+String a = '72';
+String b = '64';
+String c = '87';
+//把string类型的字符串转换为数字
+Integer total = Integer.valueOf(a) + Integer.valueOf(b) + Integer.valueOf(c);
+System.debug('total value is' + total);
+
+
