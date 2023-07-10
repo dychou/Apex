@@ -1,0 +1,24 @@
+/*
+for(声明变量语句; 条件; 增量语句){
+  循环体
+}
+⬆for（）中声明的变量，作用域只在for loop中
+
+⬇️扩大作用域
+integer year =1100;
+for(; 条件; 增量语句){
+  循环体
+}
+*/
+
+for(Integer year = 1100; year <= 2000; year++){
+    if(Math.mod(year, 4) == 0){
+        if(Math.mod(year, 100) == 0){
+            if(Math.mod(year, 400) == 0){
+                system.debug(year + 'it is a leap year');
+        	}
+        }else{
+        	system.debug(year + 'it is a leap year');
+        }
+    }
+}
