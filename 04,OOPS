@@ -1,0 +1,75 @@
+object oriented programing system(面向对象编程)
+
+class = 对象
+类用于储存对象的属性和行为，
+变量 = 属性
+方法 = 行为
+
+class Student{
+  String name;
+  Integer age;
+  Integer rollNumber;
+  String className;
+
+  void markAttendance(){
+    system.debug('Marking Attendance');
+  }
+  void getAttendance(){
+    system.debug('Retrieving Attendance');
+  }
+  void payFee(){
+    system.debug('Fee paid');
+  }
+  void getDues(){
+      system.debug('Retrieving Dues');
+    }
+}
+
+OOPS:
+1,封装
+
+2,抽象:隐藏复杂代码片段，或一些敏感代码片段或属性，使他们不被其他类或对象看到
+   public class Student{
+       private String name;
+       private Integer age;
+       private Integer rollNumber;
+       private String className;
+
+       public void markAttendance(){
+          system.debug('Marking Attendance');
+        }
+       public void getAttendance(){
+          system.debug('Retrieving Attendance');
+        }
+}
+
+3,继承
+    public interface Shapes {
+        Double getArea();
+        Double getPerimeter();
+    }
+
+    public class Rectangle inplements Shapes {
+        privete Double width;
+        privete Double height;
+        
+        public Double getArea(){
+          return wigth * height;
+        }
+        public Double getPerimeter(){
+          return 2*(wigth + height);
+        }
+    }
+
+4,多态:方法名可以一致，参数必须不同
+
+    void send(String text){
+        System.debug('Sending text message');
+    }
+    void send(Blob singleImage){
+        System.debug('Sending video/image message');
+    }
+    void send(List<Blob> multipleImages){
+        System.debug('Sending multiple videos/images');
+    }
+
