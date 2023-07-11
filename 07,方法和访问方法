@@ -21,3 +21,104 @@ HelloWorld firstClass = new HelloWorld();
 firstClass.printGreeting();
 
 //调用类中的方法或变量时，不可直接调用私有的变量，但是可以通过类中的公共的方法来打印类中私有的变量
+
+
+//---------------优化重复的代码----------------
+public class HelloWorld {
+    
+    /*private String goodMorning = 'Good Morning';
+    private String goodAfternoon = 'Good Afternoon';
+    private String goodEvening = 'Good Evening';*/
+
+    /*
+    public void printGreeting() {
+        System.debug(greeting);
+    }
+
+    public void printGoodMorning() {
+        System.debug(goodMorning);
+    }
+
+    public void printGoodAfternoon() {
+        System.debug(goodAfternoon);
+    }
+
+    public void printGoodEvening() {
+        System.debug(goodEvening);
+    }
+    */
+
+    /*
+     * 声明一个打印类，打印输出任何信息
+     * Generic method to print any message
+     * */
+    public void printMessage(String msg){
+        System.debug(msg);
+    }
+    
+    //public的类中不能声明global的方法
+    // get an error about access modifiers
+    /*global void printPublicGreeting() {
+        System.debug(publicGreeting);
+    }*/
+
+}
+
+//调用
+/*
+firstClass.printGreeting();
+firstClass.printGoodMorning();
+firstClass.printGoodAfternoon();
+firstClass.printGoodEvening();
+*/
+
+// print public var's value
+System.debug(firstClass.publicGreeting);
+
+firstClass.printMessage('Hello World');
+firstClass.printMessage('This is generic method');
+firstClass.printMessage('Good Morning');
+
+//---------------return 和 声明方法名时返回值数据类型 的使用说明----------------
+public class HelloWorld {
+    //     ⬇️返回值的数据类型  
+    public String getDay(Integer dayNumber){
+        
+        String dayString = '';
+
+        switch on dayNumber {
+            when 0 {
+                dayString = 'Sunday';
+            }
+            when 1 {
+                dayString = 'Monday';
+            }
+            when 2 {
+                dayString = 'Tuesday';
+            }
+            when 3 {
+                dayString = 'Wednesday';
+            }
+            when 4 {
+                dayString = 'Thursday';
+            }
+            when 5 {
+                dayString = 'Friday';
+            }
+            when 6 {
+                dayString = 'Saturday';
+            }
+            when else {
+                dayString = 'Invalid day number';
+            }
+        }
+        //return的变量数据类型必须和方法名旁的返回值数据类型相同
+        return dayString;
+    }
+}
+
+//调用
+System.debug(firstClass.getDay(0));//Sunday
+System.debug(firstClass.getDay(2));//Tuesday
+System.debug(firstClass.getDay(6));//Saturday
+System.debug(firstClass.getDay(10)); //Invalid day number
