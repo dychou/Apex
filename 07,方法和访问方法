@@ -1,0 +1,23 @@
+//方法
+
+public class HelloWorld(){
+    //声明一个私有变量，不可从外部类调用
+    private String greeting = 'hello';
+
+    //声明一个公共变量,可从外部类调用
+    public String publicGreeting = 'world';
+
+    //声明一个公共方法
+    public void printGreeting(){
+        // 打印输出私有变量
+        System.debug(greeting);
+    }
+}
+
+//---------------调用printGreeting方法---------------
+//声明需要调用类的实例
+HelloWorld firstClass = new HelloWorld();
+//用 实例名.方法名() 调用HelloWorld类中的printGreeting方法
+firstClass.printGreeting();
+
+//调用类中的方法或变量时，不可直接调用私有的变量，但是可以通过类中的公共的方法来打印类中私有的变量
