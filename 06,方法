@@ -1,3 +1,14 @@
-访问修饰符：
+访问修饰符:provate,protected,public,global
+特殊关键字(可选):static,override
+数据类型:String,Integer,...
+访问修饰符 特殊关键字 数据类型 方法名(可接受的变量类型 变量名,可接受的变量类型 变量名){
+    方法体
+}
 
-访问修饰符 特殊关键字 
+public static Integer add(Integer num1,Integer num2){
+    Integer sum = num1 + num2;
+    return sum; //return语句中的值必须与方法中返回数据类型具有相同的数据类型
+}
+
+
+
