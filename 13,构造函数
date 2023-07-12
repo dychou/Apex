@@ -1,0 +1,56 @@
+//构造函数在每个类中都默认存在一个
+//构造函数名总是与类名相同
+//构造函数是自动调用的（在初始化类时会自动调用他们）
+//构造函数可以有多个，但参数必须不同
+
+//this关键字：代表调用类中的全局变量而不是局部变量
+//this(); 当this关键字出现，代表你试图访问类实例；当后面有空括号时，代表你试图调用一个没有参数的构造函数。
+
+//this();必须是方法中的第一个语句
+
+
+/**
+ * Covid19 Class
+ * Track covid19 recovery
+ * */
+public class Covid19 {
+    public Integer recoveredInArea = 0;
+    public static Integer recoveredInCountry = 0;
+
+    // 构造函数
+    public Covid19(){
+        System.debug('Constructor Called');
+    }
+
+    // parameterized constructor to set class variables value
+    //另一个有参数的构造函数
+    public Covid19(Integer recoveredInArea){
+        // calling blank constructor
+        this();
+        // use this keyword to refer to global variables
+        this.recoveredInArea = recoveredInArea;
+        recoveredInCountry = recoveredInArea;
+    }
+
+    public void treatPatient(){
+        recoveredInArea++;
+        recoveredInCountry++;
+    }
+
+    public static void printTreated(){
+        System.debug('Recovered in country : '+recoveredInCountry);
+    }
+}
+
+：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：
+// creating instance with parameterized connstructor
+//创建无参数的构造函数的实例
+Covid19 jaipur = new Covid19();
+//创建有参数的构造函数的实例
+Covid19 jaipur = new Covid19(5);
+
+System.debug('Recoverd in jaipur : '+jaipur.recoveredInArea);
+Covid19.printTreated();
+
+
+
