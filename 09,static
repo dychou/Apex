@@ -1,0 +1,51 @@
+//静态方法中只能使用静态变量，静态方法中不能使用或调用非静态变量
+//调用静态变量时，不必创建实例，只需 类名.静态变量名 / 类名.静态方法名()
+
+* */
+public class Covid19 {
+    public Integer recoveredInArea = 0;
+
+    //static variable
+    public static Integer recoveredInCountry = 0;
+
+    public void treatPatient(){
+        recoveredInArea++;
+        recoveredInCountry++;
+    }
+
+    // static method
+    public static void printTreated(){
+        System.debug('Recovered in country : '+recoveredInCountry);
+    }
+
+    //static block
+    static {
+
+    }
+}
+
+//-----------------调用--------------
+//调用普通变量：先创建实例，实例名.变量名;
+Covid19 jaipur = new Covid19();
+System.debug('Recoverd in jaipur : '+jaipur.recoveredInArea);
+
+//调用静态方法：类名.静态方法名()
+Covid19.printTreated();
+
+//System.debug('Recoverd in country : '+Covid19.recoveredInCountry);
+
+////调用普通方法：实例名.方法名();
+jaipur.treatPatient();
+
+System.debug('Recoverd in jaipur : '+jaipur.recoveredInArea);
+
+Covid19.printTreated();
+//System.debug('Recoverd in country : '+Covid19.recoveredInCountry);
+
+Covid19 hyd = new Covid19();
+hyd.treatPatient();
+
+System.debug('Recoverd in hyd : '+hyd.recoveredInArea);
+Covid19.printTreated();
+//System.debug('Recoverd in country : '+Covid19.recoveredInCountry);
+
