@@ -1,0 +1,81 @@
+/*Pizza Rates:
+1 slice - $8/slice
+2-3 slice - $7/slice
+>3 slice - $6/slice
+
+Ross ordered - 3 slices
+Chandler ordered - 1 slice
+Joey ordered - 4 slices
+*/
+
+//--------------------------原始代码------------------------
+final Integer OnlyOneSlice = 8;
+final Integer UptoOThreeSlice = 7;
+final Integer MoreThenFourSlice = 6;
+
+Integer rossOrder = 3;
+Integer chandlerOrder = 1;
+Integer joeyOrder = 4;
+Integer numberOfSlice;
+
+//嵌套三元运算符 求账单值
+//--------rossOrder
+numberOfSlice = rossOrder;
+Integer rossPay = numberOfSlice == 1 ? OnlyOneSlice * numberOfSlice : 
+				      (numberOfSlice <=3 ? UptoOThreeSlice * numberOfSlice :
+                                   		           MoreThenFourSlice * numberOfSlice);
+system.debug('rossPay:' + rossPay);
+
+//--------chandlerOrder
+numberOfSlice = chandlerOrder;
+Integer chandlerPay = numberOfSlice == 1 ? OnlyOneSlice * numberOfSlice : 
+					  (numberOfSlice <=3 ? UptoOThreeSlice * numberOfSlice :
+                                   			       MoreThenFourSlice * numberOfSlice);
+system.debug('chandlerPay:' + chandlerPay);
+
+//--------joeyOrder
+numberOfSlice = joeyOrder;
+Integer hoeyPay = numberOfSlice == 1 ? OnlyOneSlice * numberOfSlice : 
+				      (numberOfSlice <=3 ? UptoOThreeSlice * numberOfSlice :
+                                   					     MoreThenFourSlice * numberOfSlice);
+system.debug('joeyPay:' + joeyPay);
+
+
+//--------------------------利用方法优化代码------------------------
+
+public class Friends {
+    //Create rate card with constants
+    final Integer ONLY_ONE_SLICE = 8;
+    final Integer UPTO_THREE_SLICES = 7;
+    final Integer MORE_THAN_THREE_SLICES = 6;
+
+    // this method accepts number slices
+    // and returns the amount
+    public Integer getBill(Integer numberOfSlices){
+        Integer billAmount = numberOfSlices == 1 ? ONLY_ONE_SLICE*numberOfSlices :
+							              (numberOfSlices <= 3 ? UPTO_THREE_SLICES*numberOfSlices :
+								            MORE_THAN_THREE_SLICES*numberOfSlices);
+        
+        return billAmount;
+    }
+}
+ ：：：：：：：：：：：：：：：：：：：：：：：：：：
+Friends pizzaNight = new Friends();
+
+// Calculate Ross's amount
+Integer rossHasToPay = pizzaNight.getBill(3);
+System.debug('Ross has to pay - '+rossHasToPay);
+
+// Calculate Chandler's amount
+Integer chandlerHasToPay = pizzaNight.getBill(1);
+System.debug('Chandler has to pay - '+chandlerHasToPay);
+
+// Calculate Joey's amount
+Integer joeyHasToPay = pizzaNight.getBill(4);
+System.debug('Joey has to pay - '+joeyHasToPay);
+
+
+
+
+
+
