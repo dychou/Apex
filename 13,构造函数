@@ -44,9 +44,9 @@ public class Covid19 {
 
 ：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：
 // creating instance with parameterized connstructor
-//创建无参数的构造函数的实例
+//创建无参数的构造函数的实例并调用无参数构造函数
 Covid19 jaipur = new Covid19();
-//创建有参数的构造函数的实例
+//创建有参数的构造函数的实例并调用有参数构造函数
 Covid19 jaipur = new Covid19(5);
 
 System.debug('Recoverd in jaipur : '+jaipur.recoveredInArea);
