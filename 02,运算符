@@ -110,7 +110,7 @@ system.debug('chandlerPay:' + chandlerPay);
 Integer hoeyPay = joeyOrder == 1 ? OnlyOneSlice * joeyOrder : 
 				  (joeyOrder <=3 ? UptoOThreeSlice * joeyOrder :
                                    		   MoreThenFourSlice * joeyOrder);
-system.debug('hoeyPay:' + hoeyPay);
+system.debug('joeyPay:' + joeyPay);
 
 -------------------------------------------优化写法---------------------------------
 final Integer OnlyOneSlice = 8;
