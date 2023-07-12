@@ -1,0 +1,83 @@
+初始化代码的三种方式：
+  1:空白构造函数/含参数的构造函数
+  2:初始化块
+  3:静态初始化块
+
+上面着三种方式在代码中如何被调用呢？
+  静态初始化块第一个被调用
+  常规初始化块
+  最后调用构造函数
+
+
+  /**
+ * Covid19 Class
+ * Track covid19 recovery
+ * */
+public class Covid19 {
+    public Integer recoveredInArea = 0;
+    public static Integer recoveredInCountry = 0;
+
+	// initialization block 1
+  // 常规初始化块1
+    {
+        System.debug('Initilization Block 1 is Called');
+    }
+
+    // initialization block 2
+    // 常规初始化块2
+    {
+        System.debug('Initilization Block 2 is Called');
+    }
+
+    // static initialization block 1
+    // 静态初始化块1
+    static {
+        System.debug('Static Initilization Block 1 is Called');
+    }
+
+    // static initialization block 2
+    // 静态初始化块2
+    static {
+        System.debug('Static Initilization Block 2 is Called');
+    }
+
+    // blank constructor
+    // 无参构造函数
+    public Covid19(){
+        System.debug('Blank Constructor is called');
+    }
+
+    // parameterized constructor to set class variables value
+    // 有参构造函数
+    public Covid19(Integer recoveredInArea){
+        // calling blank constructor
+        // 调用无参构造函数
+        this();
+        System.debug('Parameterized Constructor is called');
+    }
+
+    //打印输出
+    public void treatPatient(){
+        recoveredInArea++;
+        recoveredInCountry++;
+    }
+
+    public static void printTreated(){
+        System.debug('Recovered in country : '+recoveredInCountry);
+    }
+}
+：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：：
+Covid19 jaipur = new Covid19(5);
+
+System.debug('Recoverd in jaipur : '+jaipur.recoveredInArea);
+Covid19.printTreated();
+
+：：：：：：：：：：：：：：：：：：：：：USER_DEBUG：：：：：：：：：：：：：：：：：：：：：：：：：：：
+06:13:31.5 (18198324)|USER_DEBUG|[21]|DEBUG|Static Initilization Block 1 is Called
+06:13:31.5 (18271450)|USER_DEBUG|[26]|DEBUG|Static Initilization Block 2 is Called
+06:13:31.5 (18934061)|USER_DEBUG|[11]|DEBUG|Initilization Block 1 is Called
+06:13:31.5 (18989280)|USER_DEBUG|[16]|DEBUG|Initilization Block 2 is Called
+06:13:31.5 (20715657)|USER_DEBUG|[31]|DEBUG|Blank Constructor is called
+06:13:31.5 (20822346)|USER_DEBUG|[38]|DEBUG|Parameterized Constructor is called
+06:13:31.5 (21152239)|USER_DEBUG|[3]|DEBUG|Recoverd in jaipur : 0
+06:13:31.5 (21347986)|USER_DEBUG|[47]|DEBUG|Recovered in country : 0
