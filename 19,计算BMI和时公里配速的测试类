@@ -1,1 +1,116 @@
+public class Fitness {
+    
+    public static Decimal calculateBMI(Decimal weight,Decimal height){
+        if(height <= 0 || weight <= 0 ){
+            return -1;
+        }else{
+            Decimal BMI;
+            BMI = weight / (height* height);        
+            return BMI;
+        }
+    }
+    
+    public static Decimal calculatePace(Decimal distanceInKm,Decimal timeInMinutes){
+        if(distanceInKm <= 0 || timeInMinutes <= 0){
+            return -1;
+        }else{
+            Decimal hr = timeInMinutes/60;
+            Decimal pace = distanceInKm / hr;
+            return pace;
+        }
+    }
+}
+
+
+------------------------测试类-----------------------
+@isTest
+public class Test_Fitness {
+	
+    @isTest
+    public static void testCalculateBMI1(){
+        Decimal weight = 60;
+        Decimal height = 1.2;
+        Decimal result = Fitness.calculateBMI(weight,height);
+        //setScale(x),取小数点的后x位
+        result = result.setScale(2);
+        system.assertEquals(41.67, result, 'BMI should be 41.67');
+    }
+    
+    @isTest
+    public static void testCalculateBMI2(){
+        Decimal weight = 0;
+        Decimal height = 1.2;
+        Decimal result = Fitness.calculateBMI(weight,height);
+        system.assertEquals(-1, result, 'BMI should be -1');
+    }
+    
+    @isTest
+    public static void testCalculateBMI3(){
+        Decimal weight = 60;
+        Decimal height = 0;
+        Decimal result = Fitness.calculateBMI(weight,height);
+        system.assertEquals(-1, result, 'BMI should be -1');
+    }
+    
+    @isTest
+    public static void testCalculateBMI4(){
+        Decimal weight = -60;
+        Decimal height = 1.2;
+        Decimal result = Fitness.calculateBMI(weight,height);
+        system.assertEquals(-1, result, 'BMI should be -1');
+    }
+    //………………………………………………………………………………
+    @isTest
+    public static void testCalculateBMI5(){
+        Decimal weight = 60;
+        Decimal height = -1.2;
+        Decimal result = Fitness.calculateBMI(weight,height);
+        system.assertEquals(-1, result, 'BMI should be -1');
+    }
+    
+    @isTest
+    public static void testCalculatePace1(){   
+        Decimal distanceInKm = 5;
+        Decimal timeInMinutes = 20;
+        Decimal result = Fitness.calculatePace(distanceInKm,timeInMinutes);
+        result = result.setScale(2);
+        system.assertEquals(15, result, 'BMI should be 15');
+    }
+    
+    @isTest
+    public static void testCalculatePace2(){   
+        Decimal distanceInKm = 5;
+        Decimal timeInMinutes = 0;
+        Decimal result = Fitness.calculatePace(distanceInKm,timeInMinutes);
+        
+        system.assertEquals(-1, result, 'BMI should be 15');
+    }
+    
+    @isTest
+    public static void testCalculatePace3(){   
+        Decimal distanceInKm = 0;
+        Decimal timeInMinutes = 20;
+        Decimal result = Fitness.calculatePace(distanceInKm,timeInMinutes);
+        
+        system.assertEquals(-1, result, 'BMI should be 15');
+    }
+    
+    @isTest
+    public static void testCalculatePace4(){   
+        Decimal distanceInKm = -5;
+        Decimal timeInMinutes = 20;
+        Decimal result = Fitness.calculatePace(distanceInKm,timeInMinutes);
+        
+        system.assertEquals(-1, result, 'BMI should be 15');
+    }
+    
+    @isTest
+    public static void testCalculatePace5(){   
+        Decimal distanceInKm = 5;
+        Decimal timeInMinutes = -20;
+        Decimal result = Fitness.calculatePace(distanceInKm,timeInMinutes);
+        
+        system.assertEquals(-1, result, 'BMI should be 15');
+    }
+}
 
