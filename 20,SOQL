@@ -1,0 +1,96 @@
+//基本的SOQL愈语法
+1,SELECT 项目名 FROM object名
+  SELECT Name , Id, Fax, Phone, OwnerId, CreatedDate FROM Account
+
+//条件查询
+1,SELECT 项目名 FROM object名 WHERE 条件
+  SELECT Name , status, company  FROM Lead WHERE status = 'closed';
+
+  满足其中一个条件
+  SELECT 项目名 FROM object名 WHERE 条件1 OR 条件2
+  SELECT Name , status, company  FROM Lead WHERE status = 'closed-converted' OR status = 'closed-not converted';
+
+  同时满足两个条件
+  SELECT 项目名 FROM object名 WHERE 条件1 AND 条件2
+  SELECT Name , status, company  FROM Lead WHERE status = 'closed-converted' AND LeadSource = 'Web';
+
+//IN 关键字：当查询语句中有多个条件时，使用IN关键字可以缩短查询语句
+ SELECT Name , status, company  FROM Lead WHERE status IN ('closed-converted'，'closed-not converted') AND LeadSource = 'Web';
+
+//LIKE 关键字（可使用通配符%）
+  LIKE'fact%'
+    --  matched value: fact,facts,factor
+    --  not matched : SFDCfacts
+ SELECT Name , status, company  FROM Lead WHERE status LIKE 'closed%' AND LeadSource = 'Web';
+  
+
+  LIKE'_ine'
+    --  matched value: Mine,Line,Pine
+    --  not matched : shine,inevitable
+
+
+//ORDER BY 关键字：对搜索结果进行排序
+  升序：ASC 降序：DESC
+
+  (按照名字字母顺序降序排序 Z-A)
+  SELECT Name , status, company  FROM Lead ORDER BY Name DESC;
+
+//LIMIT X 关键字：取X条记录
+取搜索结果的前5条记录
+SELECT Name , status, company, CreatedDate FROM Lead ORDER BY CreatedDate DESC LIMIT 5;
+
+//OFFSET X :从搜索结果的第X条记录开始查询
+忽略前10条记录，从所有搜索结果的第11条开始显示
+SELECT Name , status, company, CreatedDate FROM Lead ORDER BY CreatedDate DESC OFFSET 10;
+
+
+//SOQL运算符
+= : LeadSource = 'Web'
+!= : LeadSource != 'Web'
+< : Amount < 1000;
+<= : Amount <= 1000;
+> : Amount > 1000;大于1000
+>= : Amount >= 1000; 大于或等于1000
+LIKE : Name LIKE 'SFDCFacts%' name以SFDCFacts开头
+IN : Name IN ('SFDCFacts','SFDC Facts Academy');name是这两个的记录
+NOT IN : Name NOT IN ('SFDCFacts','SFDC Facts Academy');name不是这两个的记录
+
+
+//在SOQL中查询Date或DateTime
+  date 
+    YYYY-MM-DD 例：1999-01-01
+  dateTime	
+    YYYY-MM-DDThh:mm:ss+hh:mm  
+    1999-01-01T23:01:01+01:00
+    
+    YYYY-MM-DDThh:mm:ss-hh:mm
+    1999-01-01T23:01:01-08:00
+    
+    YYYY-MM-DDThh:mm:ssZ
+    1999-01-01T23:01:01Z
+
+//跟Date有关的关键字 
+  YESTERDAY
+  TODAY
+  TOMORROW
+  LAST_WEEK
+  THIS_WEEK
+  NEXT_WEEK
+  LAST_MONTH
+  THIS_MONTH
+  NEXT_MONTH
+  ...
+
+  https://developer.salesforce.com/docs/atlas.ja-jp.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_dateformats.htm
+  
+
+
+  
+  
+
+
+
+
+
+
+
