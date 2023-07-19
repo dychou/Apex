@@ -33,7 +33,53 @@ SELECT 字段名,字段名,(SELECT 子字段名,子字段名 FROM 子关系名) 
 
 
 //从子到父的查询
-SELECT 子字段名,子字段名,父对象名.父字段名,父对象名.父字段名 FROM 子对象名
+//不涉及子查询，因为子对象只能有一个父对象
+SELECT 子字段名,子字段名,项目名.父字段名,项目名.父字段名 FROM 子对象名
   SELECT Name, RollNumber,Shool.Name,School.RegistrationNumber FROM Studen
+
+// Get account information from contact
+SELECT Name, Phone, Department, Account.Name, Account.Website FROM Contact
+
+// get grandparent (user) object details
+SELECT Name, Phone, Department, Account.Name, Account.Website, Account.Owner.Name FROM Contact
+
+// Get author(parent object) from books(child object)
+SELECT Name, Price__c, Author__r.Name FROM Book__c
+
+
+//关系查询 challenge
+SELECT Name,  department, title FROM contact
+SELECT Name,  department, title,(SELECT CaseNumber,Subject FROM cases) FROM contact
+SELECT Name,  department, title, Account.Name,Account.Rating,(SELECT CaseNumber,Subject FROM cases) FROM contact
+SELECT Name,  department, title, Account.Name,Account.Rating,(SELECT CaseNumber,Subject FROM cases) FROM contact WHERE Account.Rating = 'Hot'
+
+// Contact is a parent object of case
+// Account is a parent object of Contact
+
+// Retrieve Name, Department and Title of all contacts
+SELECT Name, Department, Title FROM Contact
+
+// Retrieve all Cases (CaseNumber, Subject) raised by the contact
+SELECT Name, Department, Title, (Select CaseNumber, Subject FROM Cases) FROM Contact
+
+// Get parent Account's Name, Rating for each Contact
+SELECT Name, Department, Title, (Select CaseNumber, Subject FROM Cases), Account.Name, Account.Rating FROM Contact
+
+// Make sure Account fields are the initial columns in results
+SELECT Account.Name, Account.Rating, Name, Department, Title, (Select CaseNumber, Subject FROM Cases) FROM Contact
+
+// Retrieve only those records where Account Rating is Hot
+SELECT Account.Name, Account.Rating, Name, Department, Title, (Select CaseNumber, Subject FROM Cases) FROM Contact WHERE Account.Rating='Hot'
+
+// Sort results by Contact Name
+SELECT Account.Name, Account.Rating, Name, Department, Title, (Select CaseNumber, Subject FROM Cases) FROM Contact WHERE Account.Rating='Hot' ORDER BY Name
+
+// Only retrieve open cases (use IsClosed Checkbox field value)
+SELECT Account.Name, Account.Rating, Name, Department, Title, (Select CaseNumber, Subject FROM Cases WHERE IsClosed=false) FROM Contact WHERE Account.Rating='Hot' ORDER BY Name
+
+// Add one more filter condition, Contact Department must be equals to 'Technology'
+SELECT Account.Name, Account.Rating, Name, Department, Title, (Select CaseNumber, Subject FROM Cases WHERE IsClosed=false) FROM Contact WHERE Account.Rating='Hot' AND Department='Technology' ORDER BY Name
+
+
 
 
