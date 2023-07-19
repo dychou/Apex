@@ -1,0 +1,32 @@
+////////////////绑定变量/////////////////////////
+List<String> accountNames = new List<String>();
+accountNames.add('Sample SObject Account');
+accountNames.add('New Line Cinema');
+accountNames.add('SFDCFacts');
+accountNames.add('Burlington Textiles Corp of America');
+
+//使用冒号:在SOQL查询中使用Apex变量，这称为绑定变量 
+List<Account> accounts = [SELECT Id, Name, Phone, Rating FROM Account
+                         	WHERE Name IN :accountNames];
+System.debug('Accounts: '+accounts);
+System.debug('Accounts Size: '+accounts.size());
+
+
+///////////////////////动态SOQL/////////////////////////
+String accountClass = 'Class3';
+
+String queryString = 'SELECT Id, Name, Phone, Rating FROM Account';
+
+if(accountClass == 'Class1'){
+    queryString += ' WHERE Rating=\'Hot\' AND Type=\'Prospect\'';
+} else if(accountClass == 'Class2'){
+    queryString += ' WHERE Rating=\'Warm\' AND Type=\'Other\'';
+} else {
+    queryString += ' WHERE Rating=\'Hot\'';
+}
+
+List<Account> accounts = Database.query(queryString);
+System.debug('Accounts '+accounts);
+System.debug('Accounts size '+accounts.size());
+
+
