@@ -1,0 +1,16 @@
+Database Methods: 
+  1，允许控制部分数据的处理，如果有少量数据损坏无法执行处理，执行代码不会报错，且允许记录部分成功。
+  2，不会抛出异常，并且会得到一个结果集。
+  
+Database.SaveResult[] srList = 
+Databese.insert(accList,false);  //插入成功的数据，忽略失败的数据，可以在log中查看成功或失败的记录
+Databese.insert(accList,true); //插入全部数据，或不插入全部数据
+
+
+DML statements：
+  1，没有只处理部分数据的功能，全部成功或全部失败。
+  2，处理出错时，会抛出异常。
+  
+insert accList;
+
+
