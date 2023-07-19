@@ -1,0 +1,36 @@
+//在SOQQL中使用关系查询
+//salesforce中父子关系的object的话可以使用子查询
+
+school：父  student：子  ⭕️
+company:父  contact: 子  ⭕️
+school   company  ❌
+//从父到子的查询
+SELECT 字段名,字段名,(SELECT 子字段名,子字段名 FROM 子关系名) FROM 父对象名
+   SELECT Name, RegistrationNumber,(SELECT Name,Rollnumber FROM Students) FROM School
+
+  // Get all related contacts of an account
+  SELECT Name, Phone, Website, (SELECT Name, Department, Email FROM Contacts) FROM Account
+  
+  // Get all related contacts (with where clause) of an account (with where clause)
+  SELECT Name, Phone, Website, 
+    (SELECT Name, Department, Email FROM Contacts WHERE Department='Finance') 
+  FROM Account WHERE Name='United Oil & Gas, UK'
+  
+  // Get all related contacts (with where clause) and opportunities of an account
+  SELECT Name, Phone, Website, 
+    (SELECT Name, Department, Email FROM Contacts WHERE Department='Finance'), 
+    (SELECT Name, Amount FROM Opportunities) 
+  FROM Account
+  
+  // Get all books(child object) of an author (parent object)
+  //当从父到子查询，并且父对象为自定义对象时，（）中的子关系名后要加上__r后缀，__r表示定义了关系
+  SELECT Name, 
+    (SELECT Name FROM Books__r) 
+  FROM Author__c
+
+
+//从子到父的查询
+SELECT 子字段名,子字段名,父对象名.父字段名,父对象名.父字段名 FROM 子对象名
+  SELECT Name, RollNumber,Shool.Name,School.RegistrationNumber FROM Studen
+
+
