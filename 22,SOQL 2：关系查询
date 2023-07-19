@@ -5,6 +5,9 @@ school：父  student：子  ⭕️
 company:父  contact: 子  ⭕️
 school   company  ❌
 //从父到子的查询
+ 限制1，从父到子的查询只能深入一个级别
+    2，从父到子的查询最多可以使用20个相关对象
+
 SELECT 字段名,字段名,(SELECT 子字段名,子字段名 FROM 子关系名) FROM 父对象名
    SELECT Name, RegistrationNumber,(SELECT Name,Rollnumber FROM Students) FROM School
 
