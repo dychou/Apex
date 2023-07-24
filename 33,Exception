@@ -1,0 +1,72 @@
+//抛出exception时， 会停止代码的执行，甚至之前的代码也会还原或回滚
+//Apex对于不同类型的事件有多种exception
+ 例如：DML异常
+      math异常
+      SOQL异常
+      。。。
+
+
+////////////////////////////////////////////////////////////////////////////
+
+//处理异常
+//抛出异常时可以处理它，使程序继续运行。
+//无论异常是否从try块中抛出，finally都将始终执行，而catch块仅在抛出异常并被catch块捕获时执行
+//catch与finally的区别
+  * 只有在try块中抛出异常，并且该异常符合catch块中的异常类型时，catch块才会执行
+  * 无论异常是否从try块中抛出，finally都将始终执行
+
+
+try{
+  //当你认为你的程序在特定的一行或一段代码中抛出某种类型的异常时，
+  //应该把这段代码放在try块中
+  //需要识别可能在稍后阶段抛出异常的代码
+}catch{
+  //捕获try块中引发的特定异常
+}finally{
+  //保证一定会执行的代码块，并允许清理代码
+}
+
+System.debug('Before Exception');
+try{
+    // Math Exception
+    Double result = 10/0;
+    System.debug('Result: '+result);
+
+    // DML Exception
+    // Account accRec = new Account();
+    // insert accRec;
+    System.debug('Empty try block ');
+} catch(Exception e){
+    System.debug('Caught generic exception ');
+} finally {
+    System.debug('finally called ');
+}
+System.debug('After Exception');
+
+//////////////////////////////////////////////////////////////////////////////
+//Exception method
+//https://developer.salesforce.com/docs/atlas.ja-jp.apexcode.meta/apexcode/apex_classes_exception_methods.htm
+System.debug('Before Exception');
+try{
+    // Math Exception
+    Double result = 10/0;
+    System.debug('Result: '+result);
+
+    // DML Exception
+    // Account accRec = new Account();
+    // insert accRec;
+    System.debug('Empty try block ');
+} catch(Exception e){
+    system.debug('Cause '+e.getCause());
+    system.debug('Message '+e.getMessage());
+    system.debug('Line Number '+e.getLineNumber());
+    system.debug('Stack Trace '+e.getStackTraceString ());
+} finally {
+    System.debug('finally called ');
+}
+System.debug('After Exception');
+
+
+
+
+
