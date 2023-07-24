@@ -1,0 +1,70 @@
+//基本数据类型
+Boolean
+String
+Integer
+Long
+Decimal
+Double
+Date
+Time
+Datetime
+Blob
+ID
+
+//集合
+List
+Set
+Map
+
+/////////////////////////////////////////////////////////////
+
+//类作为数据类型
+//使用new 来创建类的实例
+Covid19 jaipur = new Covid19();
+Covid19：数据类型
+jaipur：变量
+
+可以使用Apex类作为数据类型，创建的变量可以访问该特定类的所有方法和变量，
+在集合中也可以使用Apex类数据类型
+
+//一个新冠肺炎列表
+List<Covid19> hpCities = new List<Covid19>();
+//一组新冠肺炎
+set<Covid19> hpCities = new Set<Covid19>();
+//字符串映射和新冠肺炎列表
+Map<String,List<Covid19>> stateToCityMap = new Map<String,List<Covid19>>();
+
+/////////////////////////////////////////////////////////////
+
+//基本/自定义对象作为数据类型
+//在创建自定义对象或标准对象的新实例的时候，也会将该对象用作数据类型
+Account acc = new Account(Name = 'ABC');
+Account：数据类型
+acc：变量
+
+//一个Account列表
+List<Account> accountList = new List<Account>();
+//一组Countact
+set<Countact> countactSet = new Set<Countact>();
+//id映射和Lead列表
+Map<id,List<Lead>> leadMap = new Map<id,List<Lead>>();
+
+/////////////////////////////////////////////////////////////
+
+//基本/自定义对象作为数据类型并使用SOQL语句
+List<Account> accounts =[SELECT Name,Phone FROM Account];
+
+Map<id,Account> accountsMap = new Map<id,Account>([SELECT Name,Phone FROM Account]);
+
+/////////////////////////////////////////////////////////////
+//SObject:任何一个标准的，或自定义的object都是SObject
+
+List<Object> accounts = [SELECT id, Name FROM Account];
+List<Object> contacts = [SELECT id, Name FROM Contact];
+List<Object> leads = [SELECT id, Name FROM Lead];
+List<Object> books = [SELECT id, Name FROM Book__c];
+List<Object> authors = [SELECT id, Name FROM Author__c];
+
+
+
+
