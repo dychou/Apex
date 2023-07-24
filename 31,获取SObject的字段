@@ -1,0 +1,37 @@
+
+//////////////////////////////////////////////////
+//SObject class
+//https://developer.salesforce.com/docs/atlas.ja-jp.apexcode.meta/apexcode/apex_methods_system_sobject.htm#apex_System_SObject_get_2
+
+
+//get(fieldName)
+// Retrieve all books and assign to a List collection
+List<SObject> books = [SELECT Name, Price__c FROM Book__c];
+for(SObject book : books){
+                               //转换字段值类型String.valueOf(),(类型名)
+    System.debug('Book Name: '+String.valueOf(book.get('Name'))+' Book Price: '+(Decimal)book.get('Price__c'));
+}
+
+//getSObject(field)
+// Retrieve all books and assign to a List collection
+List<SObject> books = [SELECT Name, Price__c, Author__r.Name FROM Book__c];
+for(SObject book : books){
+    System.debug('Book Name: '+String.valueOf(book.get('Name'))+' Book Price: '+(Decimal)book.get('Price__c')+ ' Book Author: '+ (String)book.getSObject('Author__r').get('Name'));
+}
+
+//////////////////////////////////////////////////
+//Type class
+//https://developer.salesforce.com/docs/atlas.ja-jp.apexcode.meta/apexcode/apex_methods_system_type.htm#apex_System_Type_forName_2
+
+// create a new account sobject instance
+SObject accountRec = (SObject) Type.forName('Account').newInstance();
+// set field values
+accountRec.put('Name', 'Sample SObject Account');
+accountRec.put('Phone', '7697890786');
+// insert account record
+insert accountRec;
+
+
+
+
+
