@@ -1,0 +1,17 @@
+//使用 DML in Apex 中AccountController 代码
+
+//插入数据
+Account acc = new Account(Name ='ABC',Phone ='1234567');
+AccountController.insertAccount(acc);
+
+//更改插入的数据
+List<Account> accounts = [SELECT id,name,phone FROM account WHERE name = 'ABC'];
+for(Account acc : accounts){
+  acc.name = 'BCD';
+}
+update accounts;
+
+
+
+
+
