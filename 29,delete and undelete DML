@@ -1,0 +1,15 @@
+//使用 DML in Apex 中AccountController 代码
+
+//获取所有的需要删除的数据
+List<Account> accounts = [SELECT id FROM account WHERE name LIKE 'Test Account%'];
+//使用DML的删除语句来删除数据
+delete accounts;
+
+//同样可以使用database语言
+//Database.delete(accounts);
+
+//恢复已经删除的数据
+
+List<Account> deletedAccounts = [SELECT id FROM account WHERE isDeleted = true];
+//使用DML的恢复删除语句来恢复数据
+undelete deletedAccounts;
