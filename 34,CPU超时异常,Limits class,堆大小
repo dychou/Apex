@@ -1,0 +1,68 @@
+//根据salesforce的管理器限制，每个同步APEX事务必须在1万毫秒或10秒内完成
+//为了避免CPU超时异常，您需要编写即使在处理大量数据时也能正常执行的代码
+
+////////////////////////////////////Limits类////////////////////////////////////////////////////
+
+//Limits类中的方法可以获取Apex事务中当前DML调控器的使用情况，
+//告诉您当前调控器限制利用率和允许的总限制
+//https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_methods_system_limits.htm#apex_System_Limits_methods
+
+getDMLStatements()
+getHeapSize()
+
+
+// big soql query
+List<Account> accounts = [SELECT Id, Type, Name, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLongitude,
+                          BillingLatitude, BillingGeocodeAccuracy, BillingAddress, ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode, 
+                          ShippingCountry, ShippingLatitude, ShippingLongitude, ShippingGeocodeAccuracy, ShippingAddress, Phone, Fax, AccountNumber, Website, 
+                          PhotoUrl, Sic, Industry, AnnualRevenue, NumberOfEmployees, Ownership, TickerSymbol, Description, Rating, Site, AccountSource,
+                          DunsNumber, Tradestyle, NaicsCode, NaicsDesc, YearStarted, SicDesc, DandbCompanyId, OperatingHoursId, CustomerPriority__c, 
+                          SLA__c, Active__c, NumberofLocations__c, UpsellOpportunity__c, SLASerialNumber__c, SLAExpirationDate__c FROM Account];
+
+// endless while loop
+// This loop will hit heap size issue in apex
+// as it doubles the accounts list each time
+while(1==1){
+    // check if half of the heap is already utilized
+    if(Limits.getHeapSize()*2 >= Limits.getLimitHeapSize()){
+        break;
+    }
+    // make copy of accounts list
+	 List<Account> dupAccounts = accounts;
+   // add copy to original list
+   accounts.addAll(dupAccounts);
+}
+System.debug('List size: '+accounts.size());
+ 
+///////////////////////////////////////堆大小/////////////////////////////////////////////////
+//Apex事务最多可利用6MB的堆，异步处理可利用12MB的堆
+
+// big soql query
+List<Account> accounts = [SELECT Id, Type, Name, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLongitude, 
+                          BillingLatitude, BillingGeocodeAccuracy, BillingAddress, ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode, ShippingCountry, 
+                          ShippingLatitude, ShippingLongitude, ShippingGeocodeAccuracy, ShippingAddress, Phone, Fax, AccountNumber, Website, PhotoUrl, Sic, Industry,
+                          AnnualRevenue, NumberOfEmployees, Ownership, TickerSymbol, Description, Rating, Site, AccountSource, DunsNumber, Tradestyle, NaicsCode, 
+                          NaicsDesc, YearStarted, SicDesc, DandbCompanyId, OperatingHoursId, CustomerPriority__c, SLA__c, Active__c, NumberofLocations__c,
+                          UpsellOpportunity__c, SLASerialNumber__c, SLAExpirationDate__c FROM Account];
+
+// endless while loop
+// This loop will hit heap size issue in apex
+// as it doubles the accounts list each time
+while(1==1){
+     // make copy of accounts list
+	   List<Account> dupAccounts = accounts;
+     // add copy to original list
+     accounts.addAll(dupAccounts);
+}
+
+// Ways to improve heap utilization
+
+// Method 1: nullifying variables
+// free the heap size being used by accounts list
+accounts = null;
+
+// Method 2: using SOQL for loop
+for(Account acc : [SELECT Id, Type, Name, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLongitude, BillingLatitude, BillingGeocodeAccuracy, BillingAddress, ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode, ShippingCountry, ShippingLatitude, ShippingLongitude, ShippingGeocodeAccuracy, ShippingAddress, Phone, Fax, AccountNumber, Website, PhotoUrl, Sic, Industry, AnnualRevenue, NumberOfEmployees, Ownership, TickerSymbol, Description, Rating, Site, AccountSource, DunsNumber, Tradestyle, NaicsCode, NaicsDesc, YearStarted, SicDesc, DandbCompanyId, OperatingHoursId, CustomerPriority__c, SLA__c, Active__c, NumberofLocations__c, UpsellOpportunity__c, SLASerialNumber__c, SLAExpirationDate__c FROM Account]){
+
+}
+
