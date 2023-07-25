@@ -1,0 +1,97 @@
+//根据Opportunity对象的Amount金额来为Profile__c字段批量赋值
+
+public class OpportunityController {
+
+    public static void updateProfile(List<Id> oppIds){
+        for(Id oppId : oppIds){
+        
+            // get opp record
+            Opportunity opp = [SELECT Id, Amount, Profile__c FROM Opportunity WHERE Id =: oppId];
+            if(opp.Amount <10000){
+                opp.Profile__c = 'Low';
+            } else if (opp.Amount > 50000){
+                opp.Profile__c = 'High';
+            } else{
+                opp.Profile__c = 'Medium';
+            }
+            
+            // update opportunity
+            update opp;
+        }
+        
+    }
+}
+
+//////////////////////////////////////////////////////////////////////
+//调用并测试上方代码
+
+List<Opportunity> oppRecords = [SELECT Id FROM Opportunity];
+
+List<Id> oppIds = new List<Id>();
+
+for(Opportunity opp : oppRecords){
+    oppIds.add(opp.Id);
+}
+OpportunityController.updateProfile(oppIds);
+
+
+//////////////////////////////优化SOQL查询////////////////////////////////////////
+//无论使用哪一种循环，要始终避免在循环中编写SOQL查询和DML操作
+
+//TOO many SOQL queries:101
+//在一个事务中只能执行100次SOQL查询
+
+public class OpportunityController {
+    public static void updateProfile(List<Id> oppIds){
+        // query all records first
+        List<Opportunity> opps = [SELECT Id, Amount, Profile__c FROM Opportunity WHERE Id IN: oppIds];
+        
+        // iterate over all the items
+        for(Opportunity opp : opps){
+            // get opp record
+            if(opp.Amount == null){
+                opp.Profile__c = '';
+            } else if(opp.Amount <10000){
+                opp.Profile__c = 'Low';
+            } else if (opp.Amount > 50000){
+                opp.Profile__c = 'High';
+            } else{
+                opp.Profile__c = 'Medium';
+            }
+            update opp;
+        }
+        
+    }
+}
+
+//////////////////////////////优化DML操作////////////////////////////////////////
+//无论使用哪一种循环，要始终避免在循环中编写SOQL查询和DML操作
+
+//TOO many DML statements:151
+//在一个事务中只能执行150次DML操作
+
+public class OpportunityController {
+
+    public static void updateProfile(List<Id> oppIds){
+        //1
+        List<Opportunity> opps = [SELECT Id, Amount, Profile__c FROM Opportunity WHERE Id IN: oppIds];
+        //2
+        for(Opportunity opp : opps){
+            // get opp record
+            if(opp.Amount == null){
+                opp.Profile__c = 'Low';
+            } else if(opp.Amount <10000){
+                opp.Profile__c = 'Low';
+            } else if (opp.Amount > 50000){
+                opp.Profile__c = 'High';
+            } else{
+                opp.Profile__c = 'Medium';
+            }
+        }
+        //3
+        // update all item at once
+        update opps;
+    }
+}
+
+
