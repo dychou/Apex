@@ -37,6 +37,8 @@ OpportunityController.updateProfile(oppIds);
 
 //////////////////////////////优化SOQL查询////////////////////////////////////////
 //无论使用哪一种循环，要始终避免在循环中编写SOQL查询和DML操作
+//Apex ガバナ制限
+//https://developer.salesforce.com/docs/atlas.ja-jp.salesforce_app_limits_cheatsheet.meta/salesforce_app_limits_cheatsheet/salesforce_app_limits_platform_apexgov.htm
 
 //TOO many SOQL queries:101
 //在一个事务中只能执行100次SOQL查询
