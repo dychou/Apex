@@ -1,0 +1,74 @@
+////////////////////////////聚合函数////////////////////////////
+
+// get count of account
+SELECT COUNT() FROM Account
+
+// get count of ids in Account
+SELECT COUNT(Id) FROM Account
+
+// get count of distinct names in Account
+SELECT COUNT_DISTINCT(Name) FROM Account
+
+// multiple functions
+SELECT COUNT_DISTINCT(Name), COUNT(Id) FROM Account
+
+// Sum of amount in Opportunity
+SELECT SUM(Amount) FROM Opportunity
+
+// Max of amount in Opportunity
+SELECT MAX(Amount) FROM Opportunity
+
+// Min of amount in Opportunity
+SELECT MIN(Amount) FROM Opportunity
+
+// Avg of amount in Opportunity
+SELECT AVG(Amount) FROM Opportunity
+
+// Multiple functions
+SELECT SUM(Amount), MAX(Amount), MIN(Amount), AVG(Amount) FROM Opportunity
+
+
+////////////////////////////  GROUP BY ////////////////////////////
+
+SELECT StageName, COUNT(Id) FROM Opportunity GROUP BY StageName
+
+// Multiple aggregate functions
+SELECT StageName, COUNT(Id), MAX(Amount), MIN(Amount), AVG(Amount) FROM Opportunity GROUP BY StageName
+
+//Selecting multiple fields
+SELECT StageName, LeadSource, COUNT(Id), MAX(Amount), MIN(Amount), AVG(Amount) FROM Opportunity GROUP BY StageName, LeadSource
+
+
+////////////////////////////  HAVING  ////////////////////////////
+// get sum of amount where sum is greater than 300k
+SELECT StageName, SUM(Amount) FROM Opportunity WHERE Amount>300000 GROUP BY StageName
+
+//HAVING 必须搭配使用聚合函数
+SELECT StageName, SUM(Amount) FROM Opportunity GROUP BY StageName HAVING SUM(Amount)>30000
+
+
+////////////////////////////  聚合函数  ////////////////////////////
+
+表达式：MAX(Amount)/AVG(Amount)/MIN(Amount)
+表达式重命名：MAX(Amount) maxAmount / MIN(Amount) minAmount / AVG(Amount) avgAmount
+
+// Without Aliases / Using Expressions
+AggregateResult[] groupedResult = [SELECT StageName, MAX(Amount), MIN(Amount), AVG(Amount) FROM Opportunity GROUP BY StageName];
+
+for(AggregateResult result: groupedResult){
+    System.debug('StageName: '+result.get('StageName')+' Max Amount: '+result.get('expr0')+' Min Amount: '+result.get('expr1')+' Avg Amount: '+result.get('expr2'));
+}
+
+// Using Aliases
+AggregateResult[] groupedResult = [SELECT StageName, MAX(Amount) maxAmount, MIN(Amount) minAmount, AVG(Amount) avgAmount FROM Opportunity GROUP BY StageName];
+
+for(AggregateResult result: groupedResult){
+    System.debug('StageName: '+result.get('StageName')+' Max Amount: '+result.get('maxAmount')+' Min Amount: '+result.get('minAmount')+' Avg Amount: '+result.get('avgAmount'));
+
+
+////////////////////////////  SOQL Loop  ////////////////////////////
+
+for(AggregateResult result:  [SELECT StageName, MAX(Amount), MIN(Amount), AVG(Amount) FROM Opportunity GROUP BY StageName]){
+    System.debug('StageName: '+result.get('StageName')+' Max Amount: '+result.get('expr0')+' Min Amount: '+result.get('expr1')+' Avg Amount: '+result.get('expr2'));
+}
+
