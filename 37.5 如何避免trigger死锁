@@ -87,6 +87,7 @@ trigger LeadTrigger on Lead (before insert, after insert, before update, after u
 }
 
 ///////////////////////使用静态变量解决trigger死锁的问题/////////////////////////
+//使用静态变量可避免多次调用单个Apex trigger
 
 public class LeadTriggerHandler {
     // boolean flag to control trigger execution
