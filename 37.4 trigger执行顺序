@@ -1,0 +1,26 @@
+https://developer.salesforce.com/docs/atlas.ja-jp.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm
+
+https://www.udemy.com/course/salesforce-development/learn/lecture/22873953#overview
+
+1,process start
+2,System validation rules
+3,record triggered flows
+4,before trigger
+5,custom validation rules
+6,duplicate rules
+7,Save the record[not commit]
+8,after trigger
+9,assignment rules
+10,auto response rules 
+11,workflow rules
+12,processes and flows
+13,Escalation and entitlement rules
+14,record triggered flows
+15,roll up summary
+16,sharing rule evaluation
+17,commit all DML changes
+18,post commit operations
+
+
+
+
