@@ -1,0 +1,44 @@
+//无论使用哪一种循环，要始终避免在循环中编写SOQL查询和DML操作
+
+///////优化前///////////
+//代码执行单条或150条以下是可以的，超过150条时会报错
+
+trigger LeadTrigger on Lead (before insert, after insert, before update, after update) {
+
+    switch on Trigger.operationType {
+
+        when AFTER_INSERT {
+            for(Lead leadRecord : Trigger.new){
+                // create a task
+                Task leadTask = new Task(Subject='Follow up on Lead Status', WhoId=leadRecord.Id);
+                insert leadTask;
+            }
+        }
+
+    }
+}
+
+////////////优化后///////////
+//超过150条也可以正常运行了
+trigger LeadTrigger on Lead (before insert, after insert, before update, after update) {
+
+    switch on Trigger.operationType {
+
+        when AFTER_INSERT {
+            List<Task> leadTasks = new List<Task>();
+            
+            for(Lead leadRecord : Trigger.new){
+                // create a task
+                Task leadTask = new Task(Subject='Follow up on Lead Status', WhoId=leadRecord.Id);
+                leadTasks.add(leadTask);
+            }
+            
+            insert leadTasks;
+        }
+        
+    }
+}
+
+
+
+
