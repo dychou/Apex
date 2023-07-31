@@ -1,0 +1,116 @@
+trigger LeadTrigger on Lead (before insert, after insert, before update, after update) {
+    switch on Trigger.operationType {
+    
+        when AFTER_INSERT {
+            List<Task> leadTasks = new List<Task>();
+            for(Lead leadRecord : Trigger.new){
+                // create a task
+                Task leadTask = new Task(Subject='Follow up on Lead Status', WhoId=leadRecord.Id);
+                leadTasks.add(leadTask);
+            }
+            insert leadTasks;
+            
+            // 插入另一条线索记录
+            // 这将递归调用触发器，使trigger陷入死锁
+            Lead anotherLead = new Lead(LastName='Test Lead Single', Status='Open - Not Contacted', Company='SFDCFacts', Industry='Finance');
+            insert anotherLead;
+        }
+    }
+}
+
+
+/////////////////////////////代码优化///////////////////////////////
+先在Apex类中编写逻辑，然后从trigger调用Apex类
+
+//创建一个trigger前导处理类，并将trigger中的逻辑转移到前导处理类中
+public class LeadTriggerHandler {
+
+    public static void beforeInsertHandler(List<Lead> newRecords){
+        for(Lead leadRecord : newRecords){
+            if(String.isBlank(leadRecord.LeadSource)){
+                leadRecord.LeadSource = 'Other';
+            }
+            // validation rules on Industry fields
+            if(String.isBlank(leadRecord.Industry)){
+                leadRecord.addError('The industry field cannot be blank');
+            }
+        }
+    }
+
+    public static void afterInsertHandler(List<Lead> newRecords){
+        List<Task> leadTasks = new List<Task>();
+        for(Lead leadRecord : newRecords){
+            // create a task
+            Task leadTask = new Task(Subject='Follow up on Lead Status', WhoId=leadRecord.Id);
+            leadTasks.add(leadTask);
+        }
+        insert leadTasks;
+
+        // 插入另一条线索记录
+        // 这将递归调用触发器，依然会使trigger陷入死锁
+        Lead anotherLead = new Lead(LastName='Test Lead Single', Status='Open - Not Contacted', Company='SFDCFacts', Industry='Finance');
+        insert anotherLead;
+    }
+
+    public static void beforeUpdateHandler(List<Lead> newRecords, Map<Id, Lead> oldRecordsMap){
+        for(Lead leadRecord : newRecords){
+            if(String.isBlank(leadRecord.LeadSource)){
+                leadRecord.LeadSource = 'Other';
+            }
+            if((leadRecord.Status == 'Closed - Converted' || leadRecord.Status == 'Closed - Not Converted') 
+                &&
+                oldRecordsMap.get(leadRecord.Id).Status == 'Open - Not Contacted'){
+                leadRecord.Status.addError('You cannot directly close an open lead record');
+            }
+        }
+    }
+}
+
+
+
+//从trigger调用Apex类
+
+trigger LeadTrigger on Lead (before insert, after insert, before update, after update) {
+    switch on Trigger.operationType {
+        when BEFORE_INSERT {
+            LeadTriggerHandler.beforeInsertHandler(Trigger.new);
+        }
+
+        when AFTER_INSERT {
+            LeadTriggerHandler.afterInsertHandler(Trigger.new);
+        }
+
+        when BEFORE_UPDATE {
+            LeadTriggerHandler.beforeUpdateHandler(Trigger.new, Trigger.oldMap);
+        }
+    }
+}
+
+///////////////////////使用静态变量解决trigger死锁的问题/////////////////////////
+
+public class LeadTriggerHandler {
+    // boolean flag to control trigger execution
+    public static boolean alreadyExecuted = false;
+
+    public static void afterInsertHandler(List<Lead> newRecords){
+        List<Task> leadTasks = new List<Task>();
+        for(Lead leadRecord : newRecords){
+            // create a task
+            Task leadTask = new Task(Subject='Follow up on Lead Status', WhoId=leadRecord.Id);
+            leadTasks.add(leadTask);
+        }
+        insert leadTasks;
+
+        // alreadyExecuted field value before inserting another lead
+        if(LeadTriggerHandler.alreadyExecuted == false){
+            LeadTriggerHandler.alreadyExecuted = true;
+            Lead anotherLead = new Lead(LastName='Test Lead Single', Status='Open - Not Contacted', Company='SFDCFacts', Industry='Finance');
+            insert anotherLead;
+        }
+    }
+
+}
+
+
+
+
