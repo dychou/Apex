@@ -1,0 +1,66 @@
+////////////////why we need trigger/////////////////
+  1,自动化任务。没有与触发器关联的限制，开发人员的技能，想象力，和salesforce管理器限制是这里唯一的限制，可以轻松的绕过这些限制。
+  2.可以实施复杂的验证规则，尽管salesforce允许您通过简单的点击工具创建自定义验证规则。但一些复杂的验证规则，您无法通过简单的指向和单击来创建
+  3，当salesforce中的数据发生更改时，trigger可以用于与第三方系统进行通信。
+  4，trigger很快，比work flow更快，比流程构建器更快，比可视化流程快得多
+  5，Apex trigger支持salesforce对象中所有类型的数据更改。
+
+
+////////////////trigger Event/////////////////
+
+befor insert
+after insert
+
+befor uptate
+after update
+
+befor delete
+after delete
+
+after yndelete
+
+
+////////////////trigger 验证 并且抛出错误/////////////////
+
+addError()
+
+
+////////////////禁用 或停用 trigger/////////////////
+
+从设置菜单禁用或停用 trigger
+
+
+
+////////////////trigger 执行顺序/////////////////
+Apex允许在同一Sobject上创建多个触发器，但有多个trigger时，无法保证Trigger的执行顺序
+最好同一个Sobject上只有一个触发器
+
+
+////////////////trigger 类/////////////////
+
+Trigger.[variable name]
+  Trigger.isInsert
+  Trigger.isDelete
+  
+isExecuting	Apex コードの現在のコンテキストが Visualforce ページ、Web サービス、または executeanonymous() API コールではなく、トリガである場合、true を返します。
+isInsert	挿入操作により、Salesforce ユーザインターフェース、Apex、または API からこのトリガが実行された場合に、true を返します。
+isUpdate	更新操作により、Salesforce ユーザインターフェース、Apex、または API からこのトリガが実行された場合に、true を返します。
+isDelete	削除操作により、Salesforce ユーザインターフェース、Apex、または API からこのトリガが実行された場合に、true を返します。
+isBefore	レコードが保存される前にこのトリガが実行された場合に、true を返します。
+isAfter	すべてのレコードが保存された後にこのトリガが実行された場合に、true を返します。
+isUndelete	レコードがごみ箱から復元された後にこのトリガが実行された場合に、true を返します。この復元は、Salesforce ユーザインターフェース、Apex、または API からの復元操作の後にのみ行われます。
+...
+
+https://developer.salesforce.com/docs/atlas.ja-jp.apexcode.meta/apexcode/apex_class_System_Trigger.htm
+
+
+
+
+
+
+
+
+
+
+
+
