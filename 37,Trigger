@@ -42,7 +42,6 @@ Trigger.[variable name]
   Trigger.isInsert
   Trigger.isDelete
   
-isExecuting	Apex コードの現在のコンテキストが Visualforce ページ、Web サービス、または executeanonymous() API コールではなく、トリガである場合、true を返します。
 isInsert	挿入操作により、Salesforce ユーザインターフェース、Apex、または API からこのトリガが実行された場合に、true を返します。
 isUpdate	更新操作により、Salesforce ユーザインターフェース、Apex、または API からこのトリガが実行された場合に、true を返します。
 isDelete	削除操作により、Salesforce ユーザインターフェース、Apex、または API からこのトリガが実行された場合に、true を返します。
@@ -54,10 +53,33 @@ isUndelete	レコードがごみ箱から復元された後にこのトリガが
 https://developer.salesforce.com/docs/atlas.ja-jp.apexcode.meta/apexcode/apex_class_System_Trigger.htm
 
 
+////////////////trigger 上下文变量/////////////////
+
+new	新しいバージョンの sObject レコードのリストを返します。
+    この sObject リストは insert トリガ、update トリガ、および undelete トリガでのみ使用でき、レコードは before トリガでのみ変更できます。
+
+newMap	新しいバージョンの sObject レコードへの ID の対応付けです。
+        この対応付けは before update トリガ、after insert トリガ、after update トリガ、および after undelete トリガでのみ使用できます。
+
+//new 和newMap的区别：new上下文变量提供了一个列表，newMap提供了特定的ID和特定SObject的映射。
 
 
+old	古いバージョンの sObject レコードのリストを返します。
+    この sObject リストは update トリガと delete トリガでのみ使用できます。
+
+oldMap	古いバージョンの sObject レコードへの ID の対応付けです。
+        この対応付けは update トリガと delete トリガでのみ使用できます。
 
 
+////////////////trigger 上下文变量2/////////////////
+
+isExecuting	
+      Apex コードの現在のコンテキストが Visualforce ページ、Web サービス、または executeanonymous() API コールではなく、トリガである場合、true を返します。
+operationType	
+      現在の操作に対応する System.TriggerOperation 種別の列挙値を返します。
+      System.TriggerOperation 列挙の可能な値は次のとおりです。BEFORE_INSERT、BEFORE_UPDATE、BEFORE_DELETE、AFTER_INSERT、AFTER_UPDATE、AFTER_DELETE、AFTER_UNDELETE。トリガの種類に基づいて、異なるプログラミングロジックを使用する場合は、switch ステートメントを使用して、一意のトリガ実行列挙状態の異なる順列を指定することを検討します。
+size	
+    古いバージョンと新しいバージョンの両方を含む、トリガ呼び出しのレコードの合計数。
 
 
 
