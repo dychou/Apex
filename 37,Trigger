@@ -52,6 +52,26 @@ isUndelete	レコードがごみ箱から復元された後にこのトリガが
 
 https://developer.salesforce.com/docs/atlas.ja-jp.apexcode.meta/apexcode/apex_class_System_Trigger.htm
 
+----------------------示例代码---------------------------
+trigger LeadTrigger on Lead (before insert, before update) {
+	//System.debug('Lead trigger called');
+    for(Lead leadRecord : Trigger.new){
+        if(String.isBlank(leadRecord.LeadSource)){
+            leadRecord.LeadSource = 'Other';
+        }
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+        // check only in update operation
+        if(String.isBlank(leadRecord.Industry) && Trigger.isInsert){
+            leadRecord.addError('The industry field cannot be blank');
+        }
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+    }
+    System.debug('Lead trigger 1 is executing');
+}
+
+----------------------示例代码---------------------------
+
+
 
 ////////////////trigger 上下文变量/////////////////
 
@@ -70,6 +90,28 @@ old	古いバージョンの sObject レコードのリストを返します。
 oldMap	古いバージョンの sObject レコードへの ID の対応付けです。
         この対応付けは update トリガと delete トリガでのみ使用できます。
 
+----------------------示例代码---------------------------
+
+trigger LeadTrigger on Lead (before insert, before update, after update) {
+    for(Lead leadRecord : Trigger.new){
+        // if lead source is blank, then make it other
+        if(Trigger.isBefore && String.isBlank(leadRecord.LeadSource)){
+            leadRecord.LeadSource = 'Other';
+        }
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+        // trigger validation using oldMap
+        if((leadRecord.Status == 'Closed - Converted' || leadRecord.Status == 'Closed - Not Converted') 
+            && Trigger.oldMap.get(leadRecord.Id).Status == 'Open - Not Contacted'){
+              leadRecord.Status.addError('You cannot directly close an open lead record');
+        }
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+        // validation rules on Industry fields
+        if(String.isBlank(leadRecord.Industry) && Trigger.isInsert){
+            leadRecord.addError('The industry field cannot be blank');
+        }
+    }
+}
+----------------------示例代码---------------------------
 
 ////////////////trigger 上下文变量2/////////////////
 
@@ -81,7 +123,53 @@ operationType
 size	
     古いバージョンと新しいバージョンの両方を含む、トリガ呼び出しのレコードの合計数。
 
+----------------------示例代码---------------------------
+trigger LeadTrigger on Lead (before insert, before update, after update) {
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+    System.debug('Trigger size: '+ Trigger.size);
+    System.debug('is trigger: '+ Trigger.isExecuting);
+    System.debug('Operation type: '+ Trigger.operationType);
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+    for(Lead leadRecord : Trigger.new){
+        // if lead source is blank, then make it other
+        if(Trigger.isBefore && String.isBlank(leadRecord.LeadSource)){
+            leadRecord.LeadSource = 'Other';
+        }
 
+        if((leadRecord.Status == 'Closed - Converted' || leadRecord.Status == 'Closed - Not Converted') && Trigger.oldMap.get(leadRecord.Id).Status == 'Open - Not Contacted'){
+            leadRecord.Status.addError('You cannot directly close an open lead record');
+        }
+        // validation rules on Industry fields
+        if(String.isBlank(leadRecord.Industry) && Trigger.isInsert){
+            leadRecord.addError('The industry field cannot be blank');
+        }
+    }
+}
+----------------------示例代码---------------------------
+
+----------------------匿名块执行---------------------------
+// insert single lead
+Lead newLead = new Lead(LastName='Test Lead Single', Status='Open - Not Contacted', Company='SFDCFacts', Industry='Finance');
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+System.debug('Trigger size: '+ Trigger.size);
+System.debug('is trigger: '+ Trigger.isExecuting);
+System.debug('Operation type: '+ Trigger.operationType);
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+insert newLead;
+
+// Insert multiple leads
+List<Lead> multipleLeads = new List<Lead>();
+for(Integer i=0; i<10; i++){
+    multipleLeads.add(new Lead(LastName='Test Lead Single', Status='Open - Not Contacted', Company='SFDCFacts', Industry='Finance'));
+}
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+System.debug('Trigger size: '+ Trigger.size);
+System.debug('is trigger: '+ Trigger.isExecuting);
+System.debug('Operation type: '+ Trigger.operationType);
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+insert multipleLeads;
+
+----------------------匿名块执行---------------------------
 
 
 
