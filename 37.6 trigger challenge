@@ -1,1 +1,366 @@
 
+==============================step 1==================================
+Contact Object： checkBox filed：Active__c
+Account Object:  number filed: Active_Contacts__c
+
+* 在各对象上创建这两个项目，然后新建trigger
+
+trigger ContactTrigger on Contact (after insert, after update, after delete, after undelete) {
+
+}
+
+
+==============================step 2==================================
+trigger ContactTrigger on Contact (after insert, after update, after delete, after undelete) {
+    switch on Trigger.operationType {
+        when AFTER_INSERT {
+
+            for(Contact con : Trigger.new){
+                if(String.isNotBlank(con.AccountId)){
+
+                    // write automation logic here
+                    String accountId = con.AccountId;
+
+                    List<AggregateResult> results = [SELECT AccountId, COUNT(Id) totalContacts 
+                                                     FROM Contact 
+                                                     WHERE Active__c = true AND AccountId =: accountId 
+                                                     GROUP BY AccountId];
+                    
+                      for(AggregateResult result : results){
+                        
+                        // get account id and number of active contacts
+                        String accId = String.valueOf(result.get('AccountId'));
+                        Integer totalContacts = Integer.valueOf(result.get('totalContacts'));
+
+                        Account acc = new Account(Id=accId, Active_Contacts__c=totalContacts);
+                        update acc;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+==============================step 3==================================
+批量操作数据时，代码会出错，需要优化
+
+trigger ContactTrigger on Contact(after insert, after update, after delete, after undelete) {
+    switch on Trigger.operationType {
+        when AFTER_INSERT {
+
+            Set<Id> accountIds = new Set<Id>();
+            for (Contact con : Trigger.new) {
+                if (String.isNotBlank(con.AccountId)) {
+                    // write automation logic here
+                    accountIds.add(con.AccountId);
+                }
+            }
+
+            // get aggregate result for all accounts
+            List<AggregateResult> results = [
+                SELECT AccountId, COUNT(Id) totalContacts
+                FROM Contact
+                WHERE Active__c = TRUE AND AccountId IN :accountIds
+                GROUP BY AccountId
+            ];
+
+            // build final list of accounts to update
+            List<Account> accountsToUpdate = new List<Account>();
+            for (AggregateResult result : results) {
+
+                // get account id and number of active contacts
+                String accId = String.valueOf(result.get('AccountId'));
+                Integer totalContacts = Integer.valueOf(result.get('totalContacts'));
+
+                // make sure you use Id feild in your account to update it
+                Account acc = new Account(Id = accId, Active_Contacts__c = totalContacts);
+                accountsToUpdate.add(acc);
+            }
+
+            // update the final list of account
+            update accountsToUpdate;
+        }
+    }
+}
+
+
+==============================step 4==================================
+增加更新后的处理
+
+trigger ContactTrigger on Contact(after insert, after update, after delete, after undelete) {
+    switch on Trigger.operationType {
+        when AFTER_INSERT {
+            Set<Id> accountIds = new Set<Id>();
+            for (Contact con : Trigger.new) {
+                if (String.isNotBlank(con.AccountId)) {
+                    // write automation logic here
+                    accountIds.add(con.AccountId);
+                }
+            }
+            // get aggregate result for all accounts
+            List<AggregateResult> results = [
+                SELECT AccountId, COUNT(Id) totalContacts
+                FROM Contact
+                WHERE Active__c = TRUE AND AccountId IN :accountIds
+                GROUP BY AccountId
+            ];
+            // build final list of accounts to update
+            List<Account> accountsToUpdate = new List<Account>();
+            for (AggregateResult result : results) {
+                // get account id and number of active contacts
+                String accId = String.valueOf(result.get('AccountId'));
+                Integer totalContacts = Integer.valueOf(result.get('totalContacts'));
+                // make sure you use Id feild in your account to update it
+                Account acc = new Account(Id = accId, Active_Contacts__c = totalContacts);
+                accountsToUpdate.add(acc);
+            }
+            // update the final list of account
+            update accountsToUpdate;
+        }
+--------------------------AFTER_UPDATE 处理-----------------------------
+        when AFTER_UPDATE {
+            Set<Id> accountIds = new Set<Id>();
+            for (Contact con : Trigger.new) {
+
+                // capture the account id only if active checkbox value is flipped
+                if (String.isNotBlank(con.AccountId) && Trigger.oldMap.get(con.Id).Active__c != con.Active__c) {
+                    // write automation logic here
+                    accountIds.add(con.AccountId);
+
+                } else if (Trigger.oldMap.get(con.Id).AccountId != con.AccountId) {
+                    accountIds.add(con.AccountId);
+                    accountIds.add(Trigger.oldMap.get(con.Id).AccountId);
+                }
+            }
+            // get aggregate result for all accounts
+            List<AggregateResult> results = [
+                SELECT AccountId, COUNT(Id) totalContacts
+                FROM Contact
+                WHERE Active__c = TRUE AND AccountId IN :accountIds
+                GROUP BY AccountId
+            ];
+            // build final list of accounts to update
+            List<Account> accountsToUpdate = new List<Account>();
+            for (AggregateResult result : results) {
+                // get account id and number of active contacts
+                String accId = String.valueOf(result.get('AccountId'));
+                Integer totalContacts = Integer.valueOf(result.get('totalContacts'));
+                // make sure you use Id feild in your account to update it
+                Account acc = new Account(Id = accId, Active_Contacts__c = totalContacts);
+                accountsToUpdate.add(acc);
+            }
+            // update the final list of account
+            update accountsToUpdate;
+        }
+    }
+}
+
+==============================step 5==================================
+整理重复的代码
+
+重复的部分单独创建一个AccountContactService类存放，在用到的地方调用
+
+---------------------AccountContactService  类---------------------
+public with sharing class AccountContactService {
+    public static void updateActiveContacts(Set<Id> accountIds) {
+        // get aggregate result for all accounts
+        List<AggregateResult> results = [
+            SELECT AccountId, COUNT(Id) totalContacts
+            FROM Contact
+            WHERE Active__c = TRUE AND AccountId IN :accountIds
+            GROUP BY AccountId
+        ];
+        // build final list of accounts to update
+        List<Account> accountsToUpdate = new List<Account>();
+        for (AggregateResult result : results) {
+            // get account id and number of active contacts
+            String accId = String.valueOf(result.get('AccountId'));
+            Integer totalContacts = Integer.valueOf(result.get('totalContacts'));
+            // make sure you use Id feild in your account to update it
+            Account acc = new Account(Id = accId, Active_Contacts__c = totalContacts);
+            accountsToUpdate.add(acc);
+        }
+        // update the final list of account
+        update accountsToUpdate;
+    }
+}
+
+
+---------------------ContactTriggerHandler 类---------------------
+public with sharing class ContactTriggerHandler {
+
+    public static void afterInsertHandler(List<Contact> newContacts) {
+        Set<Id> accountIds = new Set<Id>();
+        for (Contact con : newContacts) {
+            if (String.isNotBlank(con.AccountId)) {
+                // write automation logic here
+                accountIds.add(con.AccountId);
+            }
+        }
+        //调用代码重复的部分
+        AccountContactService.updateActiveContacts(accountIds);
+    }
+
+    public static void afterUpdateHandler(List<Contact> newContacts, Map<Id, Contact> oldContactsMap) {
+        Set<Id> accountIds = new Set<Id>();
+        for (Contact con : newContacts) {
+            // capture the account id only if active checkbox value is flipped
+            if (String.isNotBlank(con.AccountId) && oldContactsMap.get(con.Id).Active__c != con.Active__c) {
+                // write automation logic here
+                accountIds.add(con.AccountId);
+            } else if (oldContactsMap.get(con.Id).AccountId != con.AccountId) {
+                accountIds.add(con.AccountId);
+                accountIds.add(oldContactsMap.get(con.Id).AccountId);
+            }
+        }
+        //调用代码重复的部分
+        AccountContactService.updateActiveContacts(accountIds);
+    }
+}
+
+---------------------ContactTrigger ---------------------
+
+trigger ContactTrigger on Contact(after insert, after update, after delete, after undelete) {
+    switch on Trigger.operationType {
+        //插入后
+        when AFTER_INSERT {
+            ContactTriggerHandler.afterInsertHandler(Trigger.new);
+        }
+
+        //更新后
+        when AFTER_UPDATE {
+            ContactTriggerHandler.afterUpdateHandler(Trigger.new, Trigger.oldMap);
+        }
+
+    }
+}
+
+==============================step 6==================================
+增加删除后，取消删除后的处理
+
+---------------------AccountContactService  类 修复了bug---------------------
+
+public with sharing class AccountContactService {
+    public static void updateActiveContacts(Set<Id> accountIds) {
+        // get aggregate result for all accounts
+        List<AggregateResult> results = [
+            SELECT AccountId, COUNT(Id) totalContacts
+            FROM Contact
+            WHERE Active__c = TRUE AND AccountId IN :accountIds
+            GROUP BY AccountId
+        ];
+        // build final list of accounts to update
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+        Map<Id, Account> accountsToUpdate = new Map<Id, Account>();
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+        for (AggregateResult result : results) {
+            // get account id and number of active contacts
+            String accId = String.valueOf(result.get('AccountId'));
+            Integer totalContacts = Integer.valueOf(result.get('totalContacts'));
+            // make sure you use Id feild in your account to update it
+            Account acc = new Account(Id = accId, Active_Contacts__c = totalContacts);
+            accountsToUpdate.put(accId, acc);
+        }
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+        // update accounts with zero active contacts
+        for(Id accId : accountIds){
+            if(!accountsToUpdate.containsKey(accId)){
+                accountsToUpdate.put(accId, new Account(Id = accId, Active_Contacts__c = 0));
+            }
+        }
+
+        // update the final list of account
+        update accountsToUpdate.values();
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+    }
+}
+
+
+---------------------ContactTriggerHandler 类---------------------
+
+  public with sharing class ContactTriggerHandler {
+    public static void afterInsertHandler(List<Contact> newContacts) {
+        Set<Id> accountIds = new Set<Id>();
+        for (Contact con : newContacts) {
+            if (String.isNotBlank(con.AccountId)) {
+                // write automation logic here
+                accountIds.add(con.AccountId);
+            }
+        }
+        AccountContactService.updateActiveContacts(accountIds);
+    }
+
+    public static void afterUpdateHandler(List<Contact> newContacts, Map<Id, Contact> oldContactsMap) {
+        Set<Id> accountIds = new Set<Id>();
+        for (Contact con : newContacts) {
+            // capture the account id only if active checkbox value is flipped
+            if (String.isNotBlank(con.AccountId) && oldContactsMap.get(con.Id).Active__c != con.Active__c) {
+                // write automation logic here
+                accountIds.add(con.AccountId);
+            } else if (oldContactsMap.get(con.Id).AccountId != con.AccountId) {
+                accountIds.add(con.AccountId);
+                accountIds.add(oldContactsMap.get(con.Id).AccountId);
+            }
+        }
+        AccountContactService.updateActiveContacts(accountIds);
+    }
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+    public static void afterDeleteHandler(List<Contact> oldContacts) {
+        Set<Id> accountIds = new Set<Id>();
+        for (Contact con : oldContacts) {
+            if (String.isNotBlank(con.AccountId)) {
+                // write automation logic here
+                accountIds.add(con.AccountId);
+            }
+        }
+        AccountContactService.updateActiveContacts(accountIds);
+    }
+
+    public static void afterUndeleteHandler(List<Contact> newContacts) {
+        Set<Id> accountIds = new Set<Id>();
+        for (Contact con : newContacts) {
+            if (String.isNotBlank(con.AccountId)) {
+                // write automation logic here
+                accountIds.add(con.AccountId);
+            }
+        }
+        AccountContactService.updateActiveContacts(accountIds);
+    }
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+}
+
+---------------------ContactTrigger ---------------------
+trigger ContactTrigger on Contact(after insert, after update, after delete, after undelete) {
+    switch on Trigger.operationType {
+        when AFTER_INSERT {
+            ContactTriggerHandler.afterInsertHandler(Trigger.new);
+        }
+        when AFTER_UPDATE {
+            ContactTriggerHandler.afterUpdateHandler(Trigger.new, Trigger.oldMap);
+        }
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+        when AFTER_DELETE {
+            ContactTriggerHandler.afterDeleteHandler(Trigger.old);
+        }
+        when AFTER_UNDELETE {
+            ContactTriggerHandler.afterUndeleteHandler(Trigger.new);
+        }
+🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
